@@ -1,0 +1,19 @@
+# Slepenie API atslēgu faili
+.env
+
+# Datubāze (katrs izstrādātājs izveido savu lokālo kopiju caur migrate)
+*.sqlite3
+db.sqlite3
+
+# Python pagaidu faili un kešs
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+
+# VS Code un vides iestatījumi
+.vscode/
+.idea/
+
+# Pagaidu pārbaudes faili
+*.tmp
