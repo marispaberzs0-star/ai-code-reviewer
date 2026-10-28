@@ -1,0 +1,41 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Pieslēgties sistēmai | AI Koda Recenzents{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-xl">
+    <div class="text-center mb-6">
+        <span class="text-3xl">🔐</span>
+        <h1 class="text-2xl font-bold text-white mt-2">Pieslēgties sistēmai</h1>
+        <p class="text-slate-400 text-xs mt-1">Ievadiet savus datus, lai veiktu koda pārskatus</p>
+    </div>
+
+    {% if form.errors %}
+        <div class="bg-red-950/60 border border-red-500/50 text-red-300 text-xs p-3 rounded-lg mb-4">
+            Nepareizs lietotājvārds vai parole. Lūdzu, mēģiniet vēlreiz.
+        </div>
+    {% endif %}
+
+  
+    <form method="post" action="{% url 'login' %}" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_username" class="block text-xs font-medium text-slate-300 mb-1">Lietotājvārds:</label>
+            <input type="text" name="username" autofocus required id="id_username"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+            <label for="id_password" class="block text-xs font-medium text-slate-300 mb-1">Parole:</label>
+            <input type="password" name="password" required id="id_password"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-white text-sm focus:outline-none focus:border-blue-500">
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition shadow mt-2">
+            Pieteikties
+        </button>
+    </form>
+</div>
+{% endblock %}

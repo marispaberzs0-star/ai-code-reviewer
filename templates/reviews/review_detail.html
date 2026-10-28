@@ -1,0 +1,96 @@
+<!-- templates/reviews/review_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ review.title }} | AI Koda Recenzents{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <a href="{% url 'review_list' %}" class="text-blue-400 hover:text-blue-300 text-sm mb-2 inline-block">&larr; Atpakaļ uz sarakstu</a>
+        <h1 class="text-2xl font-bold text-white">{{ review.title }}</h1>
+        <p class="text-slate-400 text-sm">Valoda: <strong class="text-blue-400 font-mono">{{ review.language.name }}</strong> | Izveidots: {{ review.created_at|date:"d.m.Y H:i" }}</p>
+    </div>
+    
+
+   <!-- PĀRBAUDES DZINĒJU BEIDŽI (DISCLAIMER) -->
+        <div class="flex items-center gap-2 mt-3">
+            <span class="text-xs text-slate-400">Izmantotie analīzes rīki:</span>
+            {% if review.language.slug == 'python' %}
+                <span class="bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 text-xs px-2.5 py-0.5 rounded font-mono">⚡ Ruff (Linter)</span>
+                <span class="bg-amber-950/80 text-amber-300 border border-amber-700/50 text-xs px-2.5 py-0.5 rounded font-mono">🛡️ Bandit (Security)</span>
+            {% elif review.language.slug == 'cpp' %}
+                <span class="bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 text-xs px-2.5 py-0.5 rounded font-mono">⚙️ Cppcheck (CLI)</span>
+            {% endif %}
+            <span class="bg-purple-950/80 text-purple-300 border border-purple-700/50 text-xs px-2.5 py-0.5 rounded font-mono">🤖 Google Gemini AI</span>
+        </div>
+    </div>
+    
+    <!-- CRUD: Delete poga -->
+    <form method="POST" action="{% url 'review_delete' review.id %}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo pārskatu?');">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600/80 hover:bg-red-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition shadow">
+            Dzēst pārskatu 🗑
+        </button>
+    </form>
+</div>
+
+<!-- AI Kopsavilkums (Summary) -->
+{% if review.summary %}
+<div class="bg-blue-950/40 border border-blue-500/30 rounded-xl p-5 mb-6 shadow">
+    <div class="flex items-center gap-2 mb-2">
+        <span class="text-xl">🤖</span>
+        <h2 class="text-lg font-semibold text-blue-300">AI Recenzenta kopsavilkums</h2>
+    </div>
+    <p class="text-slate-200 text-sm leading-relaxed">{{ review.summary }}</p>
+</div>
+{% endif %}
+</div>
+
+<!-- Kods -->
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-5 mb-6 shadow">
+    <h2 class="text-lg font-semibold text-white mb-3">Pārbaudītais kods</h2>
+    <pre class="bg-slate-900 border border-slate-700 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>{{ review.source_code }}</code></pre>
+</div>
+
+<!-- Atrastās problēmas (ReviewIssue) -->
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow">
+    <h2 class="text-lg font-semibold text-white mb-4">Atrastās problēmas un ieteikumi ({{ review.issues.count }})</h2>
+
+    {% if review.issues.all %}
+        <div class="space-y-3">
+            {% for issue in review.issues.all %}
+            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 flex justify-between items-start">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-mono font-bold px-2 py-0.5 rounded
+                            {% if issue.severity == 'error' %}bg-red-900/60 text-red-300 border border-red-500/40
+                            {% elif issue.severity == 'warning' %}bg-yellow-900/60 text-yellow-300 border border-yellow-500/40
+                            {% else %}bg-blue-900/60 text-blue-300 border border-blue-500/40{% endif %}">
+                            {{ issue.get_severity_display }}
+                        </span>
+                        {% if issue.line_number %}
+                            <span class="text-xs text-slate-400 font-mono">Rinda: {{ issue.line_number }}</span>
+                        {% endif %}
+                        <span class="text-xs text-slate-500">({{ issue.get_tool_display }})</span>
+                    </div>
+                    <p class="text-slate-200 text-sm mt-1">{{ issue.message }}</p>
+                    {% if issue.suggestion %}
+                        <p class="text-xs text-slate-400 mt-2 font-mono bg-slate-800 p-2 rounded">💡 Ieteikums: {{ issue.suggestion }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% elif review.status == 'completed' %}
+        <!-- Ja kļūdu nav un pārbaude ir pabeigta -->
+        <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-lg p-5 text-center">
+            <span class="text-2xl">🎉</span>
+            <p class="text-emerald-300 font-medium mt-1">Lieliski! Kļūdas nav atrastas.</p>
+            <p class="text-slate-400 text-xs mt-1">Statiskie skeneri pārbaudīja kodu un nekonstatēja sintakses vai drošības problēmas.</p>
+             <p class="text-slate-400 text-xs mt-1">AI pārbaudīja kodu un nekonstatēja problēmas.</p>
+        </div>
+    {% else %}
+        <p class="text-slate-400 text-sm">Kods tiek apstrādāts...</p>
+    {% endif %}
+</div>
+{% endblock %}

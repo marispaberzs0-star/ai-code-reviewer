@@ -1,0 +1,79 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}AI Koda Recenzents | Vieda koda analīze{% endblock %}
+
+{% block content %}
+<!-- Hero sekcija -->
+<div class="text-center py-12 px-4 max-w-4xl mx-auto">
+    <div class="inline-flex items-center gap-2 bg-blue-950/60 border border-blue-500/40 text-blue-300 text-xs px-3.5 py-1.5 rounded-full mb-6 font-mono">
+        <span>🚀</span>
+        <span>Hibrīdā analīze: CLI Skeneri + Google Gemini AI</span>
+    </div>
+    
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+        Automātisks koda pārskats <br>
+        <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            ar mākslīgā intelekta jaudu
+        </span>
+    </h1>
+
+    <p class="text-slate-400 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+        Atrodiet sintakses kļūdas, drošības ievainojamības un saņemiet arhitektūras ieteikumus dažu sekunžu laikā. Atbalsts Python, C++, C#, JS un citām valodām.
+    </p>
+
+    <div class="flex flex-wrap justify-center gap-4">
+        <a href="{% url 'review_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition shadow-lg shadow-blue-600/30">
+            Sākt bezmaksas pārbaudi &rarr;
+        </a>
+        <a href="{% url 'review_list' %}" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-6 rounded-xl border border-slate-700 transition">
+            Visi koda pārskati
+        </a>
+    </div>
+</div>
+
+<!-- Kā tas darbojas? (Feature Cards) -->
+<div class="grid md:grid-cols-3 gap-6 my-12">
+    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow">
+        <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+            ⚡
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Statiskā analīze (CLI)</h3>
+        <p class="text-slate-400 text-sm">
+            Ruff, Bandit un Cppcheck tūlītēji atrod sintakses kļūdas, mirušo kodu un drošības robus bez kļūdainiem minējumiem.
+        </p>
+    </div>
+
+    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow">
+        <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+            🤖
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Gemini AI aģents</h3>
+        <p class="text-slate-400 text-sm">
+            Mākslīgais intelekts analizē algoritmus, ieteic labāko praksi un sniedz detalizētu kopsavilkumu latviešu valodā.
+        </p>
+    </div>
+
+    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow">
+        <div class="w-12 h-12 bg-emerald-600/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+            🛡️
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Viesu un Pro piekļuve</h3>
+        <p class="text-slate-400 text-sm">
+            Izmēģiniet līdz 10 pārbaudēm bez autorizācijas. Reģistrējieties, lai iegūtu neierobežotu piekļuvi un GitHub integrāciju!
+        </p>
+    </div>
+</div>
+
+<!-- Atbalstītās valodas -->
+<div class="bg-slate-800/40 border border-slate-700 rounded-2xl p-6 text-center">
+    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Atbalstītās programmēšanas valodas</h3>
+    <div class="flex flex-wrap justify-center gap-3">
+        {% for lang in languages %}
+            <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3 py-1.5 rounded-lg font-mono">
+                {{ lang.name }} ({{ lang.extension }})
+            </span>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

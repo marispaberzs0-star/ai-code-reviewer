@@ -1,0 +1,65 @@
+<!-- templates/reviews/review_create.html -->
+{% extends 'base.html' %}
+
+{% block title %}Jauna koda pārbaude | AI Koda Recenzents{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+    <h1 class="text-2xl font-bold text-white mb-2">Nosūtīt kodu analīzei</h1>
+    <p class="text-slate-400 text-sm mb-5">Ievadiet nosaukumu, izvēlieties valodu un iekopējiet pirmkodu pārbaudei.</p>
+
+    <!-- VIESA LIMITA VIZUĀLAIS BANERIS -->
+    {% if remaining_checks is not None %}
+    <div class="mb-6 bg-amber-950/40 border border-amber-500/40 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="flex items-center gap-2.5">
+            <span class="text-xl">⚡</span>
+            <div>
+                <p class="text-xs font-semibold text-amber-200">Viesa bezmaksas režīms</p>
+                <p class="text-[11px] text-amber-300/80">
+                    Jums šajā sesijā atlikušas: <strong>{{ remaining_checks }}</strong> no {{ guest_limit }} pārbaudēm.
+                </p>
+            </div>
+        </div>
+        <a href="{% url 'register' %}" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs py-2 px-3.5 rounded-lg transition whitespace-nowrap shadow">
+            Iegūt bezlimitu &rarr;
+        </a>
+    </div>
+    {% endif %}
+
+    <form method="POST" class="space-y-5">
+        {% csrf_token %}
+
+        <div>
+            <label for="title" class="block text-sm font-medium text-slate-300 mb-1">Pārskata nosaukums / Uzdevums</label>
+            <input type="text" name="title" id="title" required placeholder="Piemēram: Lietotāja autentifikācijas funkcija"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+            <label for="language" class="block text-sm font-medium text-slate-300 mb-1">Programmēšanas valoda</label>
+            <select name="language" id="language" required
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500">
+                {% for lang in languages %}
+                    <option value="{{ lang.id }}">{{ lang.name }} ({{ lang.extension }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="source_code" class="block text-sm font-medium text-slate-300 mb-1">Pirmkods</label>
+            <textarea name="source_code" id="source_code" rows="12" required
+                      placeholder="Ielīmējiet savu kodu šeit..."
+                      class="w-full font-mono text-sm bg-slate-900 border border-slate-700 rounded-lg p-4 text-white focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+            <a href="{% url 'review_list' %}" class="bg-slate-700 hover:bg-slate-600 text-slate-300 py-2.5 px-5 rounded-lg transition">
+                Atcelt
+            </a>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition shadow">
+                Sākt analīzi 🚀
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

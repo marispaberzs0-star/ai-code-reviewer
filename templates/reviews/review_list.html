@@ -1,0 +1,55 @@
+<!-- templates/reviews/review_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Pārskatu saraksts | AI Koda Recenzents{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-white">Visi koda pārskati</h1>
+        <p class="text-slate-400 text-sm">Pārskatiet veiktās koda analīzes un atrastās kļūdas</p>
+    </div>
+    <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-full border border-slate-700">
+        Kopā: <strong>{{ reviews.count }}</strong>
+    </span>
+</div>
+
+{% if reviews %}
+<div class="grid gap-4">
+    {% for review in reviews %}
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-slate-500 transition shadow flex justify-between items-center">
+        <div>
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-semibold text-white">{{ review.title }}</span>
+              
+                <span class="bg-slate-700 text-blue-400 text-xs px-2.5 py-1 rounded font-mono font-bold">{{ review.language.name }}</span>
+            </div>
+            <p class="text-slate-400 text-xs mt-2">Pievienots: {{ review.created_at|date:"d.m.Y H:i" }}</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Statuss -->
+            {% if review.status == 'completed' %}
+                <span class="bg-green-900/60 text-green-300 border border-green-600/40 text-xs px-3 py-1 rounded-full">Pabeigts</span>
+            {% elif review.status == 'pending' %}
+                <span class="bg-yellow-900/60 text-yellow-300 border border-yellow-600/40 text-xs px-3 py-1 rounded-full animate-pulse">Apstrādā</span>
+            {% else %}
+                <span class="bg-red-900/60 text-red-300 border border-red-600/40 text-xs px-3 py-1 rounded-full">Kļūda</span>
+            {% endif %}
+
+            <a href="{% url 'review_detail' review.id %}" class="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-1.5 px-3.5 rounded-lg transition">
+                Apskatīt &rarr;
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-slate-800/50 border border-dashed border-slate-700 rounded-2xl p-12 text-center">
+    <p class="text-slate-400 mb-4">Pagaidām nav pievienots neviens koda pārskats.</p>
+    <a href="{% url 'review_create' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg transition shadow">
+        Veikt pirmo pārbaudi 🚀
+    </a>
+</div>
+{% endif %}
+{% endblock %}
